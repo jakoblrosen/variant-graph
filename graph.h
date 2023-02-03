@@ -23,4 +23,4 @@ public:
 };
 
 
-#endif //FINAL_PROJECT_GRAPH_H
+#endif //VARIANT_GRAPH_GRAPH_H
