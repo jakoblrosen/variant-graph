@@ -4,7 +4,7 @@
 #include "graph.h"
 
 void usage() {
-    std::cout << "Usage: ./final_project <input_file> <output_file>" << std::endl;
+    std::cout << "Usage: ./variant_graph <input_file> <output_file>" << std::endl;
 }
 
 void readFile(std::vector<node *> *nodes, const std::string &filename) {

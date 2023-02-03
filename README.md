@@ -1,5 +1,7 @@
 # CSCI 3104 FINAL PROJECT #
 
+## VARIANT GRAPH ##
+
 ---
 
 ### DESCRIPTION ###
