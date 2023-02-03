@@ -4,7 +4,7 @@
 #include "graph.h"
 
 void usage() {
-    std::cout << "Usage: ./final_project input.file output.file" << std::endl;
+    std::cout << "Usage: ./final_project <input_file> <output_file>" << std::endl;
 }
 
 void readFile(std::vector<node *> *nodes, const std::string &filename) {
@@ -26,9 +26,12 @@ void readFile(std::vector<node *> *nodes, const std::string &filename) {
         }
         std::istringstream stream(input);
         auto variants = new std::vector<int>;
-        int digit;
-        while (stream >> digit) {
-            variants->push_back(digit);
+        std::string numStr;
+        int num;
+        while (std::getline(stream, numStr, ',')) {
+            if (std::istringstream(numStr) >> num) {
+                variants->push_back(num);
+            }
         }
         nodes->push_back(new node(variants));
         i++;
@@ -79,11 +82,12 @@ int main(int argc, char *argv[]) {
     auto variantGraph = new graph;
     auto nodes = new std::vector<node *>;
 
-    std::cout << "Reading graph from file " << argv[1] << std::endl;
+    std::cout << "Reading graph from " << argv[1] << std::endl;
     readFile(nodes, argv[1]);
 
     // start timer
     std::chrono::time_point start = std::chrono::system_clock::now();
+    std::cout << "Starting graph assembly..." << std::endl;
 
     size_t size = nodes->size();
     for (size_t i = 0; i < size; i++) {
@@ -92,9 +96,10 @@ int main(int argc, char *argv[]) {
 
     // end timer
     std::chrono::time_point end = std::chrono::system_clock::now();
-
-    writeFile(variantGraph, argv[2]);
     std::chrono::duration<double> elapsed = end - start;
     std::cout << "Graph assembled in " << elapsed.count() << "seconds" << std::endl;
+
+    std::cout << "Writing graph to " << argv[2] << std::endl;
+    writeFile(variantGraph, argv[2]);
     return 0;
 }
