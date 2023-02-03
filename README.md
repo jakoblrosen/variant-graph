@@ -6,7 +6,7 @@
 
 ### DESCRIPTION ###
 
-A program that will read in a list of "variant" sets and arrange them in a graph in a way that connects related sets.
+A program that will read in a list of "variant" sets and arranges them in a graph in a way that connects related sets.
 
 ### USAGE ###
 
