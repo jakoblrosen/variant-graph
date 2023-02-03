@@ -2,8 +2,8 @@
 // Created by Jakob Rosen on 2/1/23.
 //
 
-#ifndef FINAL_PROJECT_GRAPH_H
-#define FINAL_PROJECT_GRAPH_H
+#ifndef VARIANT_GRAPH_GRAPH_H
+#define VARIANT_GRAPH_GRAPH_H
 
 
 #include <unordered_map>

@@ -40,9 +40,15 @@ bool node::isRelative(node *relative) {
             relativeIndex++;
         } else if (thisVariant > relativeVariant) {
             relativeIndex++;
+            if (thisSize > relativeSize) {
+                return false;
+            }
             dif++;
         } else {
             thisIndex++;
+            if (thisSize < relativeSize) {
+                return false;
+            }
             dif++;
         }
 

@@ -2,8 +2,8 @@
 // Created by Jakob Rosen on 2/1/23.
 //
 
-#ifndef FINAL_PROJECT_NODE_H
-#define FINAL_PROJECT_NODE_H
+#ifndef VARIANT_GRAPH_NODE_H
+#define VARIANT_GRAPH_NODE_H
 
 
 #include <vector>
