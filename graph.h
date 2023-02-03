@@ -8,6 +8,7 @@
 
 #include <unordered_map>
 #include <vector>
+#include <omp.h>
 #include "node.h"
 
 class graph {
