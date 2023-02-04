@@ -27,27 +27,13 @@ void graph::insertNode(node *newNode) {
         std::vector<node *> *parents = this->nodes->at(size - 1);
         size_t parentSize = parents->size();
         bool related[parentSize];
-#pragma omp parallel for shared(newNode, parents, parentSize, related) default(none)
+        #pragma omp parallel for shared(newNode, parents, parentSize, related) default(none)
         for (size_t i = 0; i < parentSize; i++) {
             related[i] = newNode->isRelative(parents->at(i));
         }
         for (size_t i = 0; i < parentSize; i++) {
             if (related[i]) {
                 parents->at(i)->addEdge(newNode);
-            }
-        }
-    }
-    if (this->nodes->contains(size + 1)) {
-        std::vector<node *> *children = this->nodes->at(size + 1);
-        size_t childrenSize = children->size();
-        bool related[childrenSize];
-#pragma omp parallel for shared(newNode, children, childrenSize, related) default(none)
-        for (size_t i = 0; i < childrenSize; i++) {
-            related[i] = newNode->isRelative(children->at(i));
-        }
-        for (size_t i = 0; i < childrenSize; i++) {
-            if (related[i]) {
-                newNode->addEdge(children->at(i));
             }
         }
     }

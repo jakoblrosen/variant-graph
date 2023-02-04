@@ -86,6 +86,10 @@ int main(int argc, char *argv[]) {
     std::cout << "Reading graph from " << argv[1] << std::endl;
     readFile(nodes, argv[1]);
 
+    std::cout << "Sorting input data..." << std::endl;
+    std::sort(nodes->begin(), nodes->end(),
+              [](node *a, node *b){ return a->getVariants()->size() < b->getVariants()->size(); });
+
     // start timer
     std::chrono::time_point start = std::chrono::system_clock::now();
     std::cout << "Starting graph assembly..." << std::endl;
