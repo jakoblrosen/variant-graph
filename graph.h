@@ -9,7 +9,6 @@
 #include <unordered_map>
 #include <vector>
 #include <bitset>
-#include <omp.h>
 #include "node.h"
 
 class graph {
