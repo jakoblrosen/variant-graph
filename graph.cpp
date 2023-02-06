@@ -17,6 +17,7 @@ std::vector<size_t> *graph::getLayers() {
     return this->layers;
 }
 
+/* this function assumes that data is inserted in order */
 void graph::insertNode(node *newNode) {
     size_t size = newNode->getVariants()->size();
     if (!this->nodes->contains(size)) {

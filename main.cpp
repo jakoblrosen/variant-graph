@@ -86,14 +86,14 @@ int main(int argc, char *argv[]) {
     std::cout << "Reading graph from " << argv[1] << std::endl;
     readFile(nodes, argv[1]);
 
+    // start timer
+    std::chrono::time_point start = std::chrono::system_clock::now();
+
     std::cout << "Sorting input data..." << std::endl;
     std::sort(nodes->begin(), nodes->end(),
               [](node *a, node *b){ return a->getVariants()->size() < b->getVariants()->size(); });
 
-    // start timer
-    std::chrono::time_point start = std::chrono::system_clock::now();
     std::cout << "Starting graph assembly..." << std::endl;
-
     size_t size = nodes->size();
     for (size_t i = 0; i < size; i++) {
         variantGraph->insertNode(nodes->at(i));
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     // end timer
     std::chrono::time_point end = std::chrono::system_clock::now();
     std::chrono::duration<double> elapsed = end - start;
-    std::cout << "Graph assembled in " << elapsed.count() << "seconds" << std::endl;
+    std::cout << "Graph assembled in " << elapsed.count() << " seconds" << std::endl;
 
     std::cout << "Writing graph to " << argv[2] << std::endl;
     writeFile(variantGraph, argv[2]);
