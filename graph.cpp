@@ -7,6 +7,7 @@
 graph::graph() {
     this->nodes = new std::unordered_map<size_t, std::vector<node *> *>;
     this->layers = new std::vector<size_t>;
+    this->parentLookup = new std::unordered_map<std::bitset<1024>, node *>;
 }
 
 std::unordered_map<size_t, std::vector<node *> *> *graph::getNodes() {
@@ -19,25 +20,26 @@ std::vector<size_t> *graph::getLayers() {
 
 /* this function assumes that data is inserted in order */
 void graph::insertNode(node *newNode) {
-    size_t size = newNode->getVariants()->size();
+    std::vector<int> *variantsVector = newNode->getVariants();
+    size_t size = variantsVector->size();
     if (!this->nodes->contains(size)) {
         createLayer(size);
     }
     this->nodes->at(size)->push_back(newNode);
-    if (this->nodes->contains(size - 1)) {
-        std::vector<node *> *parents = this->nodes->at(size - 1);
-        size_t parentSize = parents->size();
-        bool related[parentSize];
-        #pragma omp parallel for shared(newNode, parents, parentSize, related) default(none)
-        for (size_t i = 0; i < parentSize; i++) {
-            related[i] = newNode->isRelative(parents->at(i));
-        }
-        for (size_t i = 0; i < parentSize; i++) {
-            if (related[i]) {
-                parents->at(i)->addEdge(newNode);
-            }
-        }
+
+    auto *variantsBitset = new std::bitset<1024>;
+    for (size_t i = 0; i < size; i++) {
+        variantsBitset->set(variantsVector->at(i), true);
     }
+    for (size_t i = 0; i < size; i++) {
+        variantsBitset->set(variantsVector->at(i), false);
+        if (parentLookup->contains(*variantsBitset)) {
+            node *parent = parentLookup->at(*variantsBitset);
+            parent->addEdge(newNode);
+        }
+        variantsBitset->set(variantsVector->at(i), true);
+    }
+    this->parentLookup->insert({*variantsBitset, newNode});
 }
 
 void graph::createLayer(size_t size) {
