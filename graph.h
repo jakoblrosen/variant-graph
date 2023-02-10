@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <vector>
 #include <bitset>
+#include <ranges>
 #include "node.h"
 
 #define BITSET_SIZE 1024
@@ -23,7 +24,8 @@ public:
     graph();
     std::unordered_map<size_t, std::vector<node *> *> *getNodes();
     std::vector<size_t> *getLayers();
-    void insertNode(node *node);
+    void insertNode(node *newNode);
+    void insertNodes(std::vector<node *> *newNodes);
 };
 
 

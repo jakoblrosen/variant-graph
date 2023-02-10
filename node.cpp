@@ -32,7 +32,7 @@ bool node::isRelative(node *relative) {
     size_t relativeSize = relative->variants->size();
     size_t thisIndex = 0;
     size_t relativeIndex = 0;
-    while (thisIndex < thisSize && relativeIndex < relativeSize) {
+    while (thisIndex < thisSize and relativeIndex < relativeSize) {
         int thisVariant = this->variants->at(thisIndex);
         int relativeVariant = relative->variants->at(relativeIndex);
         if (thisVariant == relativeVariant) {

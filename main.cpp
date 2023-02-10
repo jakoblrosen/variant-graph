@@ -89,15 +89,8 @@ int main(int argc, char *argv[]) {
     // start timer
     std::chrono::time_point start = std::chrono::system_clock::now();
 
-    std::cout << "Sorting input data..." << std::endl;
-    std::sort(nodes->begin(), nodes->end(),
-              [](node *a, node *b){ return a->getVariants()->size() < b->getVariants()->size(); });
-
     std::cout << "Starting graph assembly..." << std::endl;
-    size_t size = nodes->size();
-    for (size_t i = 0; i < size; i++) {
-        variantGraph->insertNode(nodes->at(i));
-    }
+    variantGraph->insertNodes(nodes);
 
     // end timer
     std::chrono::time_point end = std::chrono::system_clock::now();
