@@ -7,17 +7,27 @@
 
 
 #include <vector>
+#include <bitset>
+#include <unordered_set>
+
+#define BITSET_SIZE 1024
 
 class node {
     std::vector<int> *variants;
     std::vector<node *> *edges;
+    std::bitset<BITSET_SIZE> *bits;
+    std::unordered_set<node *> *blacklist;
 public:
     node();
     explicit node(std::vector<int> *variants);
     std::vector<int> *getVariants();
     std::vector<node *> *getEdges();
+    std::unordered_set<node *> *getBlacklist();
     void addEdge(node *target);
-    bool isRelative(node *relative);
+    void setBits();
+    void setBlacklist(std::unordered_set<node *> *blacklist);
+    bool isSubsetOf(node *subset);
+    bool isSupersetOf(node *superset);
 };
 
 
