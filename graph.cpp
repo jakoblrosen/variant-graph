@@ -51,10 +51,9 @@ void graph::insertNode(node *newNode) {
 
 void graph::insertNodes(std::vector<node *> *newNodes) {
     std::sort(newNodes->begin(), newNodes->end(),
-              [](node *a, node *b){ return a->getVariants()->size() > b->getVariants()->size(); });
-    size_t size = newNodes->size();
-    for (size_t i = 0; i < size; i++) {
-        this->insertNode(newNodes->at(i));
+              [](node *a, node *b){ return a->getVariants()->size() < b->getVariants()->size(); });
+    for (auto it = newNodes->rbegin(); it != newNodes->rend(); it++) {
+        this->insertNode(*it);
     }
 }
 
