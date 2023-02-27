@@ -4,14 +4,14 @@
 
 #include "node.h"
 
-node::node() {
-    this->variants = new std::vector<int>;
-    this->edges = new std::vector<node *>;
-}
-
 node::node(std::vector<int> *variants) {
     this->variants = variants;
     this->edges = new std::vector<node *>;
+    this->bits = new std::bitset<BITSET_SIZE>;
+    for (int variant : *this->variants) {
+        this->bits->set(variant, true);
+    }
+    this->blacklist = nullptr;
 }
 
 std::vector<int> *node::getVariants() {
@@ -22,40 +22,26 @@ std::vector<node *> *node::getEdges() {
     return this->edges;
 }
 
+std::bitset<BITSET_SIZE> *node::getBits() {
+    return this->bits;
+}
+
+std::unordered_set<node *> *node::getBlacklist() {
+    return this->blacklist;
+}
+
 void node::addEdge(node *target) {
     this->edges->push_back(target);
 }
 
-bool node::isRelative(node *relative) {
-    int dif = 0;
-    size_t thisSize = this->variants->size();
-    size_t relativeSize = relative->variants->size();
-    size_t thisIndex = 0;
-    size_t relativeIndex = 0;
-    while (thisIndex < thisSize && relativeIndex < relativeSize) {
-        int thisVariant = this->variants->at(thisIndex);
-        int relativeVariant = relative->variants->at(relativeIndex);
-        if (thisVariant == relativeVariant) {
-            thisIndex++;
-            relativeIndex++;
-        } else if (thisVariant > relativeVariant) {
-            relativeIndex++;
-            if (thisSize > relativeSize) {
-                return false;
-            }
-            dif++;
-        } else {
-            thisIndex++;
-            if (thisSize < relativeSize) {
-                return false;
-            }
-            dif++;
-        }
+void node::setBlacklist(std::unordered_set<node *> *newBlacklist) {
+    this->blacklist = newBlacklist;
+}
 
-        if (dif > 1) {
-            return false;
-        }
-    }
+bool node::isSubsetOf(node *subset) {
+    return (*this->bits == (*this->bits & *subset->bits));
+}
 
-    return true;
+bool node::isSupersetOf(node *superset) {
+    return (*superset->bits == (*superset->bits & *this->bits));
 }
