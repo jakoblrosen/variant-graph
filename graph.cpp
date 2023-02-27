@@ -58,7 +58,7 @@ void graph::insertNode(node *newNode) {
         for (size_t currNodeIndex = 0; currNodeIndex < nodesSize; currNodeIndex++) {
             node *currentNode = nodesAtLayer->at(currNodeIndex);
             if (!blacklist->contains(currentNode) and newNode->isSupersetOf(currentNode)) {
-                newNode->addEdge(currentNode);
+                currentNode->addEdge(newNode);
                 blacklist->insert(currentNode);
                 blacklist->merge(std::unordered_set<node *>(*currentNode->getBlacklist()));
             }
