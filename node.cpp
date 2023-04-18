@@ -4,14 +4,16 @@
 
 #include "node.h"
 
-node::node() {
-    this->variants = new std::vector<int>;
-    this->edges = new std::vector<node *>;
-}
-
 node::node(std::vector<int> *variants) {
     this->variants = variants;
     this->edges = new std::vector<node *>;
+    auto *bits = new std::bitset<BITSET_SIZE>;
+    for (int i : *variants) {
+        bits->set(i);
+    }
+    this->bits = bits;
+    this->blacklist = new std::set<node *>;
+    this->blacklist->insert(this);
 }
 
 std::vector<int> *node::getVariants() {
@@ -22,40 +24,27 @@ std::vector<node *> *node::getEdges() {
     return this->edges;
 }
 
+std::bitset<BITSET_SIZE> *node::getBits() {
+    return this->bits;
+}
+
+std::set<node *> *node::getBlacklist() {
+    return this->blacklist;
+}
+
 void node::addEdge(node *target) {
     this->edges->push_back(target);
 }
 
-bool node::isRelative(node *relative) {
-    int dif = 0;
-    size_t thisSize = this->variants->size();
-    size_t relativeSize = relative->variants->size();
-    size_t thisIndex = 0;
-    size_t relativeIndex = 0;
-    while (thisIndex < thisSize and relativeIndex < relativeSize) {
-        int thisVariant = this->variants->at(thisIndex);
-        int relativeVariant = relative->variants->at(relativeIndex);
-        if (thisVariant == relativeVariant) {
-            thisIndex++;
-            relativeIndex++;
-        } else if (thisVariant > relativeVariant) {
-            relativeIndex++;
-            if (thisSize > relativeSize) {
-                return false;
-            }
-            dif++;
-        } else {
-            thisIndex++;
-            if (thisSize < relativeSize) {
-                return false;
-            }
-            dif++;
-        }
+void node::updateBlacklist(std::set<node *> *blacklist) {
+    delete this->blacklist;
+    this->blacklist = blacklist;
+}
 
-        if (dif > 1) {
-            return false;
-        }
-    }
+bool node::isSubsetOf(node *target) {
+    return *this->bits == (*this->bits & *target->bits);
+}
 
-    return true;
+bool node::isSupersetOf(node *target) {
+    return *target->bits == (*target->bits & *this->bits);
 }
