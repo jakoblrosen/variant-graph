@@ -7,11 +7,13 @@
 node::node(std::vector<int> *variants) {
     this->variants = variants;
     this->edges = new std::vector<node *>;
-    this->bits = new std::bitset<BITSET_SIZE>;
-    for (int variant : *this->variants) {
-        this->bits->set(variant, true);
+    auto *bits = new std::bitset<BITSET_SIZE>;
+    for (int i : *variants) {
+        bits->set(i);
     }
-    this->blacklist = nullptr;
+    this->bits = bits;
+    this->blacklist = new std::set<node *>;
+    this->blacklist->insert(this);
 }
 
 std::vector<int> *node::getVariants() {
@@ -26,7 +28,7 @@ std::bitset<BITSET_SIZE> *node::getBits() {
     return this->bits;
 }
 
-std::unordered_set<node *> *node::getBlacklist() {
+std::set<node *> *node::getBlacklist() {
     return this->blacklist;
 }
 
@@ -34,14 +36,15 @@ void node::addEdge(node *target) {
     this->edges->push_back(target);
 }
 
-void node::setBlacklist(std::unordered_set<node *> *newBlacklist) {
-    this->blacklist = newBlacklist;
+void node::updateBlacklist(std::set<node *> *blacklist) {
+    delete this->blacklist;
+    this->blacklist = blacklist;
 }
 
-bool node::isSubsetOf(node *subset) {
-    return (*this->bits == (*this->bits & *subset->bits));
+bool node::isSubsetOf(node *target) {
+    return *this->bits == (*this->bits & *target->bits);
 }
 
-bool node::isSupersetOf(node *superset) {
-    return (*superset->bits == (*superset->bits & *this->bits));
+bool node::isSupersetOf(node *target) {
+    return *target->bits == (*target->bits & *this->bits);
 }

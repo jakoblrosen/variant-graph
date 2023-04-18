@@ -16,17 +16,14 @@ if len(a_lines) != len(b_lines):
 
 found = False
 
-a_set = set()
-
 for a_line in a_lines:
-    a_set.add(a_line)
-
-for b_line in b_lines:
-    if not b_line in a_set:
-        print('Difference between files')
-        print(f'file_b line: {b_line}')
-        exit(0)
-
+	for b_line in b_lines:
+		if a_line == b_line:
+			found = True
+			break
+	if not found:
+		print('The files have a difference')
+		exit(0)
 print('The files are the same')
 exit(0)
 

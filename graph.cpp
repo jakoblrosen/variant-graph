@@ -22,56 +22,32 @@ std::vector<size_t> *graph::getLayers() {
 void graph::insertNode(node *newNode) {
     std::vector<int> *variantsVector = newNode->getVariants();
     size_t size = variantsVector->size();
-    if (!this->nodes->contains(size)) {
+    if (this->nodes->find(size) == this->nodes->end()) {
         createLayer(size);
     }
     this->nodes->at(size)->push_back(newNode);
-    auto *masterBitset = new std::bitset<BITSET_SIZE>(*newNode->getBits());
-    auto *blacklist = new std::unordered_set<node *>;
 
-    // check layer above
-    if (this->nodes->contains(size - 1)) {
-        for (size_t i = 0; i < size; i++) {
-            masterBitset->set(newNode->getVariants()->at(i), false);
-            if (this->parentLookup->contains(*masterBitset)) {
-                node *currentNode = this->parentLookup->at(*masterBitset);
-                currentNode->addEdge(newNode);
-                blacklist->insert(currentNode);
-                blacklist->merge(std::unordered_set<node *>(*currentNode->getBlacklist()));
-            }
-            masterBitset->set(newNode->getVariants()->at(i), true);
-        }
-    }
-    this->parentLookup->insert({*masterBitset, newNode});
-
-    // now search other nodes for other maximum subsets
-    for (auto it = this->layers->rbegin(); it != this->layers->rend(); it++) {
-        size_t currLayer = *it;
-
-        // skip the two layers we have already solved for
-        if (currLayer == size - 1 or currLayer == size) {
+    for (std::vector<size_t>::reverse_iterator iter = this->layers->rbegin(); iter != this->layers->rend(); iter++) {
+        if (*iter >= size) {
             continue;
         }
-
-        auto *nodesAtLayer = this->nodes->at(currLayer);
-        size_t nodesSize = nodesAtLayer->size();
-        for (size_t currNodeIndex = 0; currNodeIndex < nodesSize; currNodeIndex++) {
-            node *currentNode = nodesAtLayer->at(currNodeIndex);
-            if (!blacklist->contains(currentNode) and newNode->isSupersetOf(currentNode)) {
-                currentNode->addEdge(newNode);
-                blacklist->insert(currentNode);
-                blacklist->merge(std::unordered_set<node *>(*currentNode->getBlacklist()));
+        auto *nodesAtLayer = this->nodes->at(*iter);
+        for (node *cmpNode : *nodesAtLayer) {
+            auto *blacklist = newNode->getBlacklist();
+            if (blacklist->find(cmpNode) == blacklist->end() and newNode->isSupersetOf(cmpNode)) {
+                cmpNode->addEdge(newNode);
+                auto *newBlacklist = this->blacklistUnion(newNode->getBlacklist(), cmpNode->getBlacklist());
+                newNode->updateBlacklist(newBlacklist);
             }
         }
     }
-    newNode->setBlacklist(blacklist);
-    delete masterBitset;
 }
 
 void graph::insertNodes(std::vector<node *> *newNodes) {
     std::sort(newNodes->begin(), newNodes->end(),
               [](node *a, node *b){ return a->getVariants()->size() < b->getVariants()->size(); });
-    for (auto & newNode : *newNodes) {
+    size_t size = newNodes->size();
+    for (node *newNode : *newNodes) {
         this->insertNode(newNode);
     }
 }
@@ -79,4 +55,10 @@ void graph::insertNodes(std::vector<node *> *newNodes) {
 void graph::createLayer(size_t size) {
     this->layers->push_back(size);
     this->nodes->insert({size, new std::vector<node *>});
+}
+
+std::set<node *> *graph::blacklistUnion(std::set<node *> *a, std::set<node *> *b) {
+    auto *result = new std::set<node *>(*a);
+    result->insert(b->begin(), b->end());
+    return result;
 }
