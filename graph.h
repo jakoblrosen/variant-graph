@@ -8,13 +8,16 @@
 
 #include <unordered_map>
 #include <vector>
+#include <bitset>
 #include <ranges>
 #include "node.h"
+
+#define BITSET_SIZE 1024
 
 class graph {
     std::unordered_map<size_t, std::vector<node *> *> *nodes;
     std::vector<size_t> *layers;
-    std::unordered_map<int, std::vector<node *> *> *buckets;
+    std::unordered_map<std::bitset<BITSET_SIZE>, node *> *parentLookup;
 
     void createLayer(size_t);
 public:
