@@ -7,7 +7,6 @@
 graph::graph() {
     this->nodes = new std::unordered_map<size_t, std::vector<node *> *>;
     this->layers = new std::vector<size_t>;
-    this->parentLookup = new std::unordered_map<std::bitset<BITSET_SIZE>, node *>;
 }
 
 std::unordered_map<size_t, std::vector<node *> *> *graph::getNodes() {

@@ -15,7 +15,6 @@
 class graph {
     std::unordered_map<size_t, std::vector<node *> *> *nodes;
     std::vector<size_t> *layers;
-    std::unordered_map<std::bitset<BITSET_SIZE>, node *> *parentLookup;
     
     void createLayer(size_t);
     std::set<node *> *blacklistUnion(std::set<node *> *a, std::set<node *> *b);
